@@ -185,7 +185,6 @@
         );
       }
 
-      // fnction for otp
       function validateForm() {
         //send otp using ajax
 
@@ -244,7 +243,7 @@
             beforeSend: function () {
               $("#errdiv").toggle();
 
-              spinnerIcon.style.display = "inline-block"; // or "block" depending on your use case
+              spinnerIcon.style.display = "inline-block";
               $("#otpError").text("Sending OTP...");
             },
             success: function (data) {
@@ -263,7 +262,6 @@
             },
             error: function (xhr, status, error) {
               alert("some error occured");
-              //window.location.reload();
             },
             complete: function () {
               spinnerIcon.style.display = "none";
