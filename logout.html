@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Logout</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <h1>You've now succesfullu logged out , thank you for using services.</h1>
+
+    <a href="http://localhost/mycalci/welcome.html">Login again</a>
+    <script>
+      $.ajax({
+        url: "http://localhost/mycalci/index.php",
+        type: "POST",
+        data: { logout: 1 },
+        dataType: "json",
+        success: function (data) {
+          if (data && data.success == 1) {
+          }
+          console.log(data);
+        },
+        error: function (xhr, status, error) {
+          alert("some error occured");
+        },
+      });
+    </script>
+  </body>
+</html>

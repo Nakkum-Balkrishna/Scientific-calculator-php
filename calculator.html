@@ -1,0 +1,220 @@
+<html>
+  <head>
+    <title>Ajax Request Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        background-color: azure;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* Use fixed table layout */
+      }
+
+      th,
+      td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: center; /* Center align the content within cells */
+      }
+
+      th {
+        background-color: #f2f2f2; /* Set background color for header cells */
+      }
+
+      input[type="button"] {
+        width: 66%;
+        padding: 18px 35px;
+        background-color: #f5b905;
+        color: black;
+        font-size: 20px;
+        font-weight: bold;
+        border: 1px solid black;
+        border-radius: 5px;
+      }
+
+      input[type="text"] {
+        padding: 20px 60px;
+        font-size: 50px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        border: 3px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="http://localhost/mycalci/logout.html" style="align-items: right"
+      >Logout</a
+    >
+    <a href="http://localhost/mycalci/welcome.html" style="align-items: right"
+      >Home</a
+    >
+    <h1 style="margin-left: auto; padding-top: 15px; text-align: center">
+      Welcome!
+    </h1>
+    <table id="calculator">
+      <tr>
+        <td colspan="5">
+          <input type="text" id="answer" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" value="AC" onclick="clear_input()" />
+        </td>
+        <td>
+          <input type="button" value="()" onclick="dispRes('()')" />
+        </td>
+        <td>
+          <input type="button" value="%" onclick="dispRes('%')" />
+        </td>
+        <td>
+          <input type="button" value="/" onclick="dispRes('/')" />
+        </td>
+        <td>
+          <input type="button" value="sin" onclick="dispRes('sin')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" value="7" onclick="dispRes('7')" />
+        </td>
+        <td>
+          <input type="button" value="8" onclick="dispRes('8')" />
+        </td>
+        <td>
+          <input type="button" value="9" onclick="dispRes('9')" />
+        </td>
+        <td>
+          <input type="button" value="*" onclick="dispRes('*')" />
+        </td>
+        <td>
+          <input type="button" value="cos" onclick="dispRes('cos')" />
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <input type="button" value="4" onclick="dispRes('4')" />
+        </td>
+        <td>
+          <input type="button" value="5" onclick="dispRes('5')" />
+        </td>
+        <td>
+          <input type="button" value="6" onclick="dispRes('6')" />
+        </td>
+        <td>
+          <input type="button" value="-" onclick="dispRes('-')" />
+        </td>
+        <td>
+          <input type="button" value="tan" onclick="dispRes('tan')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" value="1" onclick="dispRes('1')" />
+        </td>
+        <td>
+          <input type="button" value="2" onclick="dispRes('2')" />
+        </td>
+        <td>
+          <input type="button" value="3" onclick="dispRes('3')" />
+        </td>
+        <td>
+          <input type="button" value="+" onclick="dispRes('+')" />
+        </td>
+        <td>
+          <input type="button" value="sqrt" onclick="dispRes('sqrt')" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" value="0" onclick="dispRes('0')" />
+        </td>
+        <td>
+          <input type="button" value="." onclick="dispRes('.')" />
+        </td>
+        <td>
+          <input type="button" value="clear" onclick="clearfield()" />
+        </td>
+        <td>
+          <input type="button" value="root" onclick="dispRes('**')" />
+        </td>
+        <!-- calculate function call function calculate to evaluate value -->
+        <td>
+          <input type="button" value="=" onclick="calculate()" />
+        </td>
+      </tr>
+    </table>
+
+    <script>
+      function calculate() {
+        $.ajax({
+          url: "http://localhost/mycalci/calculator.php",
+          type: "POST",
+          data: { data: document.getElementById("answer").value },
+          dataType: "json",
+          success: function (data) {
+            if (data && data.replace == 1) {
+              window.location.replace(
+                " http://localhost/mycalci/welcome.html?cred=1"
+              );
+            }
+            //$('#response-container').html(data.msg);
+            $("#answer").val(data);
+            console.log(data);
+          },
+          error: function (xhr, status, error) {
+            $("#answer").val("");
+            alert("some error occured");
+          },
+        });
+      }
+
+      function dispRes(params) {
+        document.getElementById("answer").value += params;
+      }
+
+      var cal = document.getElementById("calculator");
+      cal.onkeyup = function (event) {
+        if (event.keyCode === 13) {
+          let a = document.getElementById("answer").value;
+          console.log(a); //to evaluate
+          calculate();
+        }
+      };
+
+      function clear_input() {
+        document.getElementById("answer").value = "";
+      }
+
+      function clearfield() {
+        document.getElementById("answer").value = "";
+      }
+
+      function islogin() {
+        $.ajax({
+          url: "http://localhost/mycalci/calculator.php",
+          type: "POST",
+          dataType: "json",
+          success: function (data) {
+            if (data && data.replace == 1) {
+              window.location.replace(
+                "http://localhost/mycalci/welcome.html?cred=1"
+              );
+            }
+          },
+          error: function (xhr, status, error) {
+            $("#answer").val("");
+            alert("some error occured");
+          },
+        });
+      }
+
+      islogin();
+    </script>
+  </body>
+</html>

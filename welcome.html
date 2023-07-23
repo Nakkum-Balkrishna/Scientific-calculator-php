@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome page</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .center {
+        margin-top: 50px;
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body style="margin: 150px">
+    <h1 class="center">Welcome!</h1>
+    <div class="container mt-4">
+      <h2 class="center">Please login or signup to continue...</h2>
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <form class="mt-4" action="/mycalci/index.php" method="post">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              name="email"
+              aria-describedby="emailHelp"
+              placeholder="Enter email"
+            />
+            <small id="emailHelp" class="form-text text-muted"
+              >We'll never share your email with anyone else.</small
+            >
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              name="password"
+              placeholder="Password"
+            />
+          </div>
+          <p style="color: red" id="error"></p>
+          <button type="submit" class="btn btn-primary mt-2" name="login">
+            Login
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary mt-2"
+            data-bs-toggle="modal"
+            data-bs-target="#signupModal"
+          >
+            Sign up
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal for Sign Up -->
+    <div
+      class="modal fade"
+      id="signupModal"
+      tabindex="-1"
+      aria-labelledby="signupModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signupModalLabel">
+              Create New Account
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form
+              action="/mycalci/index.php"
+              method="post"
+              onsubmit="return validateForm(this);"
+            >
+              <div class="mb-3">
+                <label for="emailInput" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="emailInput"
+                  name="email"
+                  placeholder="Enter email"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="passwordInput" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="passwordInput"
+                  name="password"
+                  placeholder="Password"
+                />
+              </div>
+
+              <div class="mb-3" style="display: none" id="otpdiv">
+                <label for="otpInput" class="form-label">OTP</label>
+                <input
+                  type="otp"
+                  class="form-control"
+                  id="otpInput"
+                  name="otp"
+                  placeholder="Enter otp"
+                />
+              </div>
+
+              <div class="mb-3" style="display: none" id="errdiv">
+                <p style="color: red" id="otpError"></p>
+                <i
+                  class="fa fa-spinner fa-spin"
+                  style="font-size: 24px"
+                  id="spinnerIcon"
+                ></i>
+              </div>
+
+              <button type="submit" class="btn btn-primary" name="new_account">
+                Create Account
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script>
+      const queryString = window.location.search;
+
+      // Parse the query string using URLSearchParams
+      const urlParams = new URLSearchParams(queryString);
+
+      if (urlParams.has("wrong") && urlParams.get("wrong") === "1") {
+        $("#error").html("Incorrect email or password");
+      }
+
+      if (urlParams.has("cred") && urlParams.get("cred") === "1") {
+        $("#error").html("Please provide credentials to use services");
+      }
+
+      if (urlParams.has("exists") && urlParams.get("exists") === "1") {
+        $("#error").html("User already exists, please login.");
+      }
+
+      removeQueryString();
+
+      function removeQueryString() {
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
+
+      // fnction for otp
+      function validateForm() {
+        //send otp using ajax
+
+        const passwordInput = $("#passwordInput").val();
+        if (passwordInput.length < 6) {
+          alert("Password length should be greater than 6.");
+        }
+        var spinnerIcon = document.getElementById("spinnerIcon");
+
+        let getOtp = $("#otpInput").val();
+
+        var emailInput = document.getElementById("emailInput");
+        var emailValue = emailInput.value;
+
+        if (getOtp) {
+          //validate
+          data = {
+            email: emailValue,
+            otp: getOtp,
+            password: passwordInput,
+            action: "verifyOTP",
+          };
+          //send otp
+          $.ajax({
+            url: "http://localhost/mycalci/email.php",
+            type: "POST",
+            data: data,
+            dataType: "json",
+            success: function (data) {
+              if (data.success) {
+                $("#otpError").text("otp verified successfully");
+                window.location.reload();
+              } else {
+                $("#otpError").text("Some error occured, please try again");
+              }
+            },
+            error: function (xhr, status, error) {
+              alert("some error occured");
+            },
+            complete: function () {
+              spinnerIcon.style.display = "none";
+            },
+          });
+        } else {
+          data = {
+            email: emailValue,
+            password: passwordInput,
+            action: "getOTP",
+          };
+          //send otp
+          $.ajax({
+            url: "http://localhost/mycalci/email.php",
+            type: "POST",
+            data: data,
+            dataType: "json",
+            beforeSend: function () {
+              $("#errdiv").toggle();
+
+              spinnerIcon.style.display = "inline-block"; // or "block" depending on your use case
+              $("#otpError").text("Sending OTP...");
+            },
+            success: function (data) {
+              if (data.success) {
+                if (data.exists) {
+                  window.location.replace(
+                    "http://localhost/mycalci/welcome.html?exists=1"
+                  );
+                }
+                console.log("otp send successfully");
+                $("#otpError").text("OTP sent successfully");
+              } else {
+                $("#otpError").text("Some error occured, please try again");
+                window.location.reload();
+              }
+            },
+            error: function (xhr, status, error) {
+              alert("some error occured");
+              //window.location.reload();
+            },
+            complete: function () {
+              spinnerIcon.style.display = "none";
+            },
+          });
+
+          document.getElementById("otpdiv").style = "display";
+        }
+        return false;
+      }
+    </script>
+  </body>
+</html>
